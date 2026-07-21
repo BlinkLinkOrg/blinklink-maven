@@ -1,0 +1,154 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.blinklink",
+    "module": "blinklink-feed",
+    "version": "0.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2024.09.03"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation"
+        },
+        {
+          "group": "androidx.compose.material3",
+          "module": "material3"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "blinklink-feed-0.1.0.aar",
+          "url": "blinklink-feed-0.1.0.aar",
+          "size": 25464,
+          "sha512": "8a0598230fbb07ad846fa34b59b6a7a67c7324a7f4bf6ee75fb5a97949a03f30aae0e1facfd23e59e575c07e3f39720027ca334bfc6c0d33cdfde48bb52be85e",
+          "sha256": "9191d5dabaf9e9546a6c7891d8e86592c74d7a97fa100ae96bb1af0f2a0bdf7a",
+          "sha1": "7fecbb2fb60b12b9fd4145b32e37584c5df1b9cd",
+          "md5": "55dc9f846e3e025036d79893a8c11423"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.fragment",
+          "module": "fragment-ktx",
+          "version": {
+            "requires": "1.8.4"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2024.09.03"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation"
+        },
+        {
+          "group": "androidx.compose.material3",
+          "module": "material3"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "blinklink-feed-0.1.0.aar",
+          "url": "blinklink-feed-0.1.0.aar",
+          "size": 25464,
+          "sha512": "8a0598230fbb07ad846fa34b59b6a7a67c7324a7f4bf6ee75fb5a97949a03f30aae0e1facfd23e59e575c07e3f39720027ca334bfc6c0d33cdfde48bb52be85e",
+          "sha256": "9191d5dabaf9e9546a6c7891d8e86592c74d7a97fa100ae96bb1af0f2a0bdf7a",
+          "sha1": "7fecbb2fb60b12b9fd4145b32e37584c5df1b9cd",
+          "md5": "55dc9f846e3e025036d79893a8c11423"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "blinklink-feed-0.1.0-sources.jar",
+          "url": "blinklink-feed-0.1.0-sources.jar",
+          "size": 5183,
+          "sha512": "755423fc820dd94c60573d9833b3ab411f29f97ac0f326e077644e92f7b2d66c7d4b84e0236e510d547c59771c400323d5253570024d977665012e4514dd307e",
+          "sha256": "d92c11082fd3da6dbef7a7b2d14d3b82cea697d852ea0ee1c1d1576dc7ca4037",
+          "sha1": "4156e5fbdf51a728eb09bba81b298f6b24952faa",
+          "md5": "af5388f2668902c9ed7f3df3309e2c7a"
+        }
+      ]
+    }
+  ]
+}
