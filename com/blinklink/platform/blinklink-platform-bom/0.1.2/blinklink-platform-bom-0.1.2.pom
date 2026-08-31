@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.blinklink.platform</groupId>
+    <artifactId>blinklink-platform-bom</artifactId>
+    <version>0.1.2</version>
+    <packaging>pom</packaging>
+    <name>blinklink-platform-bom</name>
+    <description>Import this BOM to pin every platform starter plus the fleet's shared library versions</description>
+
+    <properties>
+        <spring-modulith.version>2.0.8</spring-modulith.version>
+        <jte.version>3.2.4</jte.version>
+        <htmx-spring-boot.version>5.0.0</htmx-spring-boot.version>
+        <jmolecules.version>2025.0.2</jmolecules.version>
+        <archunit.version>1.4.1</archunit.version>
+        <jsoup.version>1.21.1</jsoup.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- The starters themselves -->
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-ddd-archetype</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-starter-fragments</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-starter-authz</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-starter-events</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-starter-telemetry</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-compose-spec</artifactId>
+                <version>1.0.0-draft.6</version>
+            </dependency>
+
+            <!-- Shared library lines the fleet standardises on (Boot's own BOM manages the rest) -->
+            <dependency>
+                <groupId>org.springframework.modulith</groupId>
+                <artifactId>spring-modulith-bom</artifactId>
+                <version>${spring-modulith.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jmolecules</groupId>
+                <artifactId>jmolecules-bom</artifactId>
+                <version>${jmolecules.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit</artifactId>
+                <version>${archunit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte</artifactId>
+                <version>${jte.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-spring-boot-starter-4</artifactId>
+                <version>${jte.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.wimdeblauwe</groupId>
+                <artifactId>htmx-spring-boot</artifactId>
+                <version>${htmx-spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
