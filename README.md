@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 Artifacts:
 
 - `com.blinklink:blinklink-feed` — the [Blinklink Feed SDK for Android](https://github.com/BlinkLinkOrg/blinklink-feed-android)
+- `com.blinklink.platform:*` — the [Compose fleet platform starters](https://github.com/BlinkLinkOrg/blinklink-platform-starters) (bom, service-parent, ddd-archetype, starter-fragments, starter-authz, starter-events, starter-telemetry); consumed as a Maven `<repository>` at this Pages URL
