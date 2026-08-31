@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.8</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.blinklink.platform</groupId>
+    <artifactId>blinklink-platform-service-parent</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+    <name>blinklink-platform-service-parent</name>
+    <description>Parent for fleet services: Boot 4.0.8, Java 25, the platform BOM, JTE precompile wired (set gg.jte.usePrecompiledTemplates=true)</description>
+
+    <properties>
+        <java.version>25</java.version>
+        <jte.version>3.2.4</jte.version>
+        <blinklink-platform.version>0.1.0</blinklink-platform.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-platform-bom</artifactId>
+                <version>${blinklink-platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>blinklink-maven</id>
+            <url>https://blinklinkorg.github.io/blinklink-maven</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Active only when the service has templates. Generated to Java at build time and compiled
+             with the app; gg.jte.usePrecompiledTemplates=true makes the runtime load those classes. -->
+        <profile>
+            <id>jte-precompile</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/src/main/jte</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>gg.jte</groupId>
+                        <artifactId>jte-maven-plugin</artifactId>
+                        <version>${jte.version}</version>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/jte</sourceDirectory>
+                            <contentType>Html</contentType>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
