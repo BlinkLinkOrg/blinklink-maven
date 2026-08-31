@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.blinklink.platform</groupId>
+    <artifactId>blinklink-compose-spec</artifactId>
+    <!-- Tracks info.version in openapi/compose-v1.yaml — bump both together; published versions are immutable. -->
+    <version>1.0.0-draft.7</version>
+    <packaging>jar</packaging>
+    <name>blinklink-compose-spec</name>
+    <description>The Compose API contract as a consumable artifact: openapi/compose-v1.yaml packaged for per-tag codegen in fleet service builds</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.install.skip>false</maven.install.skip>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>openapi</directory>
+                <targetPath>META-INF/blinklink/openapi</targetPath>
+            </resource>
+            <resource>
+                <directory>asyncapi</directory>
+                <targetPath>META-INF/blinklink/asyncapi</targetPath>
+            </resource>
+        </resources>
+    </build>
+</project>
