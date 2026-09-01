@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.8</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.blinklink.platform</groupId>
+    <artifactId>blinklink-platform-service-parent</artifactId>
+    <version>0.1.7</version>
+    <packaging>pom</packaging>
+    <name>blinklink-platform-service-parent</name>
+    <description>Parent for fleet services: Boot 4.0.8, Java 25, the platform BOM, JTE precompile wired (set gg.jte.usePrecompiledTemplates=true)</description>
+
+    <properties>
+        <java.version>25</java.version>
+        <jte.version>3.2.4</jte.version>
+        <blinklink-platform.version>0.1.7</blinklink-platform.version>
+        <blinklink-compose-spec.version>1.0.0-draft.6</blinklink-compose-spec.version>
+        <!-- Testcontainers' shaded docker-java pins the Docker API to 1.32 when none is set, which a current
+             Engine (29.x, min API 1.40) rejects — every local Testcontainers test then fails with "Could not
+             find a valid Docker environment". Forced below for surefire; inside both that floor and CI's range. -->
+        <docker.api.version>1.41</docker.api.version>
+        <openapi-generator.version>7.14.0</openapi-generator.version>
+        <!-- Per-service spec codegen knobs: which tag-derived interfaces to generate (CSV; empty = all),
+             and where generated code lands (the one sanctioned technical package - generated, not hand-written). -->
+        <bl.spec.apis></bl.spec.apis>
+        <bl.spec.api-package>com.blinklink.spec.api</bl.spec.api-package>
+        <bl.spec.model-package>com.blinklink.spec.model</bl.spec.model-package>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-platform-bom</artifactId>
+                <version>${blinklink-platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>blinklink-maven</id>
+            <url>https://blinklinkorg.github.io/blinklink-maven</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Spec codegen: a service DECLARES these two plugins (dependency-plugin first — same phase,
+                     declaration order) and sets bl.spec.apis + the two packages; everything else is inherited. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>unpack-compose-spec</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>unpack</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>com.blinklink.platform</groupId>
+                                        <artifactId>blinklink-compose-spec</artifactId>
+                                        <version>${blinklink-compose-spec.version}</version>
+                                        <outputDirectory>${project.build.directory}/compose-spec</outputDirectory>
+                                    </artifactItem>
+                                </artifactItems>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>${openapi-generator.version}</version>
+                    <executions>
+                        <execution>
+                            <id>compose-spec-interfaces</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <inputSpec>${project.build.directory}/compose-spec/META-INF/blinklink/openapi/compose-v1.yaml</inputSpec>
+                                <generatorName>spring</generatorName>
+                                <apisToGenerate>${bl.spec.apis}</apisToGenerate>
+                                <apiPackage>${bl.spec.api-package}</apiPackage>
+                                <modelPackage>${bl.spec.model-package}</modelPackage>
+                                <generateApiTests>false</generateApiTests>
+                                <generateModelTests>false</generateModelTests>
+                                <configOptions>
+                                    <interfaceOnly>true</interfaceOnly>
+                                    <useTags>true</useTags>
+                                    <useSpringBoot3>true</useSpringBoot3>
+                                    <documentationProvider>none</documentationProvider>
+                                    <useBeanValidation>true</useBeanValidation>
+                                    <openApiNullable>false</openApiNullable>
+                                </configOptions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- Force the Docker API version for Testcontainers' shaded docker-java (see docker.api.version). -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <api.version>${docker.api.version}</api.version>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Active only when the service has templates. Generated to Java at build time and compiled
+             with the app; gg.jte.usePrecompiledTemplates=true makes the runtime load those classes. -->
+        <profile>
+            <id>jte-precompile</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/src/main/jte</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>gg.jte</groupId>
+                        <artifactId>jte-maven-plugin</artifactId>
+                        <version>${jte.version}</version>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/jte</sourceDirectory>
+                            <contentType>Html</contentType>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
