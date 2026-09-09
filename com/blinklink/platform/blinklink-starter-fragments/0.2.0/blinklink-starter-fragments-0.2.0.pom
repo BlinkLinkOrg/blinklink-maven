@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.blinklink.platform</groupId>
+        <artifactId>blinklink-platform-starters</artifactId>
+        <version>0.2.0</version>
+    </parent>
+
+    <artifactId>blinklink-starter-fragments</artifactId>
+    <name>blinklink-starter-fragments</name>
+    <description>The Fragment Protocol as typed vocabulary for a module that serves fragments: request/response contract, module mount, surrogate keys, content-hashed assets, surrogate-keyed render cache, lint; JTE + htmx</description>
+
+    <dependencies>
+        <!-- The fleet nouns the protocol is typed on (WorkspaceId, ModuleKey, WorkspaceHost) + jMolecules stereotypes. -->
+        <dependency>
+            <groupId>com.blinklink.platform</groupId>
+            <artifactId>blinklink-ddd-archetype</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <!-- Only the asset route needs MVC; a module service always has it, so it is optional here. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- The decided rendering pair rides along so every module service gets the same versions (D1). -->
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte-spring-boot-starter-4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.wimdeblauwe</groupId>
+            <artifactId>htmx-spring-boot</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- The asset route and its test run on the servlet API a module service always has. -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- The starter is gated by the same rules as the services it serves (#15); the rules read Data's @Version. -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-archunit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
