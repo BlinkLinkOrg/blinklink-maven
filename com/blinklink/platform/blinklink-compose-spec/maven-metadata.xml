@@ -3,13 +3,14 @@
   <groupId>com.blinklink.platform</groupId>
   <artifactId>blinklink-compose-spec</artifactId>
   <versioning>
-    <release>1.0.0-draft.10</release>
+    <release>1.0.0-draft.11</release>
     <versions>
       <version>1.0.0-draft.6</version>
       <version>1.0.0-draft.7</version>
       <version>1.0.0-draft.8</version>
       <version>1.0.0-draft.10</version>
+      <version>1.0.0-draft.11</version>
     </versions>
-    <lastUpdated>20260910081035</lastUpdated>
+    <lastUpdated>20260914080330</lastUpdated>
   </versioning>
 </metadata>
