@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.blinklink.platform</groupId>
+        <artifactId>blinklink-platform-starters</artifactId>
+        <version>0.3.0</version>
+    </parent>
+
+    <artifactId>blinklink-starter-telemetry</artifactId>
+    <name>blinklink-starter-telemetry</name>
+    <description>The fleet's telemetry shape (platform-spec#16): Prometheus scrape, OTLP traces keyed on an endpoint, W3C propagation, ECS log keys, resource attributes, Grafana Faro model, bl.* span vocabulary</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <!-- The three runtime pieces every fleet service carried by hand before 0.3.0: actuator (health +
+             /actuator/prometheus), Micrometer Tracing on OpenTelemetry with the OTLP exporter, the Prometheus registry. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-opentelemetry</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
