@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.blinklink.platform</groupId>
+        <artifactId>blinklink-platform-starters</artifactId>
+        <version>0.3.2</version>
+    </parent>
+
+    <artifactId>blinklink-ddd-archetype</artifactId>
+    <name>blinklink-ddd-archetype</name>
+    <description>jMolecules vocabulary, the fleet's ArchUnit rules (feature packages, JPA + Data JDBC shapes, typed identifiers), and the fleet nouns: WorkspaceId, ModuleKey, WorkspaceHost, TenantId</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jmolecules</groupId>
+            <artifactId>jmolecules-ddd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules</groupId>
+            <artifactId>jmolecules-events</artifactId>
+        </dependency>
+
+        <!-- Optional: consumers add these to their own test scope to run the rules. -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-archunit</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Optional: the wire annotations on the shared value objects (a WorkspaceId is its uuid in JSON). -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Optional: only the annotations the rules inspect (@Version, @ApplicationModuleListener). -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-events-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- The jMolecules JPA transform (partner-v5 §0.4) runs on THIS module's classes so the value objects ship as
+             single-value @Embeddables with the record no-arg constructor Hibernate needs — exactly what a service's
+             own transform does to its own types, and cannot do to a dependency's. Provided: nothing reaches consumers;
+             a JPA service declares jmolecules-jpa itself, a Data JDBC one never sees it. -->
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-jpa</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-bytebuddy-nodep</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Optional: the @Embeddable the transform stamps on the fleet nouns; only a JPA consumer has it at runtime. -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test only: the JPA-shaped fixtures the rules are proven against (the rules themselves key on annotation NAMES). -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

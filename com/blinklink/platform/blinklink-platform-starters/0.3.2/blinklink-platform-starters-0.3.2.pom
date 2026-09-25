@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.8</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.blinklink.platform</groupId>
+    <artifactId>blinklink-platform-starters</artifactId>
+    <version>0.3.2</version>
+    <packaging>pom</packaging>
+    <name>blinklink-platform-starters</name>
+    <description>Shared starters for the v5 fleet, cut to the partner-v5 service shape (2026-09-23): ddd-archetype, identity, tenancy, events, api, telemetry, fragments, authz</description>
+
+    <modules>
+        <module>blinklink-platform-bom</module>
+        <module>blinklink-platform-service-parent</module>
+        <module>blinklink-ddd-archetype</module>
+        <module>blinklink-starter-identity</module>
+        <module>blinklink-starter-tenancy</module>
+        <module>blinklink-starter-api</module>
+        <module>blinklink-starter-fragments</module>
+        <module>blinklink-starter-authz</module>
+        <module>blinklink-starter-events</module>
+        <module>blinklink-starter-telemetry</module>
+        <module>blinklink-contract-testing</module>
+    </modules>
+
+    <properties>
+        <java.version>25</java.version>
+        <!-- One version set for the fleet; keep aligned with blinklink-web-compose until the BOM is the source. -->
+        <spring-cloud.version>2025.1.3</spring-cloud.version>
+        <spring-modulith.version>2.0.8</spring-modulith.version>
+        <jte.version>3.2.4</jte.version>
+        <htmx-spring-boot.version>5.0.0</htmx-spring-boot.version>
+        <jmolecules.version>2025.0.2</jmolecules.version>
+        <archunit.version>1.4.1</archunit.version>
+        <jsoup.version>1.21.1</jsoup.version>
+        <json-schema-validator.version>1.5.8</json-schema-validator.version>
+        <byte-buddy-maven-plugin.version>1.18.8</byte-buddy-maven-plugin.version>
+        <protobuf.version>4.29.3</protobuf.version>
+        <!-- Testcontainers' shaded docker-java negotiates from 1.32, which Engine 29 rejects; pin inside its range. -->
+        <docker.api.version>1.41</docker.api.version>
+    </properties>
+
+    <!-- The spec artifact the authz starter reads its role matrix from lives here, not in central. Without
+         this a clean checkout cannot resolve blinklink-compose-spec; it only ever worked off a locally
+         published cache (2026-09-01). -->
+    <repositories>
+        <repository>
+            <id>blinklink-maven</id>
+            <url>https://blinklinkorg.github.io/blinklink-maven</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.modulith</groupId>
+                <artifactId>spring-modulith-bom</artifactId>
+                <version>${spring-modulith.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jmolecules</groupId>
+                <artifactId>jmolecules-bom</artifactId>
+                <version>${jmolecules.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit</artifactId>
+                <version>${archunit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte</artifactId>
+                <version>${jte.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blinklink.platform</groupId>
+                <artifactId>blinklink-compose-spec</artifactId>
+                <version>1.0.0-draft.6</version>
+            </dependency>
+            <dependency>
+                <groupId>com.networknt</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>${json-schema-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-spring-boot-starter-4</artifactId>
+                <version>${jte.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.wimdeblauwe</groupId>
+                <artifactId>htmx-spring-boot</artifactId>
+                <version>${htmx-spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- The fleet's jMolecules → JPA transform, run HERE too: a value object this reactor ships (Actor, Role,
+                     TenantId, WorkspaceId…) must leave as a JPA @Embeddable — a consuming service's own transform only
+                     touches its own classes (2026-09-24, found dry-running partner-v5's adoption). -->
+                <plugin>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy-maven-plugin</artifactId>
+                    <version>${byte-buddy-maven-plugin.version}</version>
+                    <configuration>
+                        <classPathDiscovery>true</classPathDiscovery>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>transform-extended</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <api.version>${docker.api.version}</api.version>
+                        </systemPropertyVariables>
+                        <environmentVariables>
+                            <DOCKER_API_VERSION>${docker.api.version}</DOCKER_API_VERSION>
+                        </environmentVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
