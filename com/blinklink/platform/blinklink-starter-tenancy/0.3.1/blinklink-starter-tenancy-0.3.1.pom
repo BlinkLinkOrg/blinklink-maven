@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.blinklink.platform</groupId>
+        <artifactId>blinklink-platform-starters</artifactId>
+        <version>0.3.1</version>
+    </parent>
+    <artifactId>blinklink-starter-tenancy</artifactId>
+    <name>blinklink-starter-tenancy</name>
+    <description>Tenant isolation and soft delete as default-on Hibernate filters (partner-v5 §1, §8, §10): marker interfaces an aggregate opts in with, the SPI-registered filters that reach derived finders and findById, the scope-aware JPA dialect, and the self/subtree scope resolvers</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.blinklink.platform</groupId>
+            <artifactId>blinklink-starter-identity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <!-- The persistence shape is JPA + Hibernate (partner-v5 §9); the filters are Hibernate's. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Real Postgres in tests — Hibernate filter behaviour and uuid coercion differ from H2. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

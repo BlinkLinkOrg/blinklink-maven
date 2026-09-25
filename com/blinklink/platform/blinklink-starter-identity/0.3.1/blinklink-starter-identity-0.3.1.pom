@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.blinklink.platform</groupId>
+        <artifactId>blinklink-platform-starters</artifactId>
+        <version>0.3.1</version>
+    </parent>
+    <artifactId>blinklink-starter-identity</artifactId>
+    <name>blinklink-starter-identity</name>
+    <description>The v5 token contract (Keycloak resource server): Claims, Actors, SystemActor, TenantContext + the request filter that lifts custom:tenantId, and the AuditorAware every service audits with</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.blinklink.platform</groupId>
+            <artifactId>blinklink-ddd-archetype</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <!-- Every v5 service is an OAuth2 resource server on the Keycloak realm (D46, partner-v5 §2). -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <!-- Optional: the servlet request filter (a service with an HTTP surface). -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Optional: AuditorAware for @CreatedBy / @LastModifiedBy (a service with Spring Data auditing). -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Optional: only the filter-order constant (inlined at compile time). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-security</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- The jMolecules JPA transform (partner-v5 §0.4) runs on THIS module's classes so the value objects ship as
+             single-value @Embeddables with the record no-arg constructor Hibernate needs — exactly what a service's
+             own transform does to its own types, and cannot do to a dependency's. Provided: nothing reaches consumers;
+             a JPA service declares jmolecules-jpa itself, a Data JDBC one never sees it. -->
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-jpa</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-bytebuddy-nodep</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Optional: the @Embeddable the transform stamps on Actor and Role; only a JPA consumer has it at runtime. -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
