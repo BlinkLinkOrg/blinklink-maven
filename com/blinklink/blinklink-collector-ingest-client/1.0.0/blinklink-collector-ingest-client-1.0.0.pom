@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The thin SERVER-SIDE ingest client compose (and, if its JVM ever emits server-known events, embed)
+         BAKE IN to fire server-known events to the collector's ingest topic (collector-v5-design.md §0.13,
+         §18.1 step 6: `compose.page.served`). It lives in the collector repo so the server-side `Batch` wire
+         can never drift from the collector's (contract §11); it is a STANDALONE, publishable library — the
+         collector SERVICE jar never depends on it at runtime (the collector only TEST-depends on it, for the
+         contract test), the host apps do. Parented to spring-boot-starter-parent (not the service pom) so it
+         builds and versions on its own; listed as a reactor module of the service only so `./mvnw verify`
+         builds + contract-tests it in one pass. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.6</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.blinklink</groupId>
+    <artifactId>blinklink-collector-ingest-client</artifactId>
+    <version>1.0.0</version>
+    <name>blinklink-collector-ingest-client</name>
+    <description>Server-side ingest client for the v5 collector — baked into compose/embed to fire server-known events (compose.page.served) to blinklink.collector.ingest.v1. See ../collector-v5-design.md §18.</description>
+
+    <properties>
+        <java.version>25</java.version>
+        <spring-cloud.version>2025.1.1</spring-cloud.version>
+        <jmolecules.version>2025.0.2</jmolecules.version>
+        <archunit.version>1.4.1</archunit.version>
+    </properties>
+
+    <dependencies>
+        <!-- CORE (no Kafka): the builders serialise a JSON Batch into a transport-neutral Message<byte[]>
+             (payload + headers + key). spring-messaging is NOT Kafka; the host supplies it. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Jackson 3 (tools.jackson) — Boot 4's default; serialises the Batch exactly as the collector parses it. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- @ValueObject / Identifier on the typed ids + value records (the partner-v5 convention, enforced by
+             ArchUnit here and in the collector). Annotations only — no jMolecules-JPA (there is no database). -->
+        <dependency>
+            <groupId>org.jmolecules</groupId>
+            <artifactId>jmolecules-ddd</artifactId>
+        </dependency>
+
+        <!-- OPTIONAL Spring Boot auto-configuration: publishes the Message through the host's StreamBridge
+             (Spring Cloud Stream, the platform rule — never raw Spring Kafka). `provided`/`optional` so the
+             core carries no binder; the host app's binder supplies the broker (infra-unaware). -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jmolecules</groupId>
+                <artifactId>jmolecules-bom</artifactId>
+                <version>${jmolecules.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- A plain library jar (no Spring Boot repackage) — it is a dependency, not an app. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals><goal>jar-no-fork</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Published to GitHub Packages under the collector repo, the org's blinklink-ddd-starter pattern
+         (.github/workflows/publish-ingest-client.yml deploys on a `collector-ingest-client-v*` tag). -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/BlinkLinkOrg/blinklink-service-collector-v5</url>
+        </repository>
+    </distributionManagement>
+</project>
