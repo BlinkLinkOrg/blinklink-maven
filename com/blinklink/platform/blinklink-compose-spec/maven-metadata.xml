@@ -3,7 +3,7 @@
   <groupId>com.blinklink.platform</groupId>
   <artifactId>blinklink-compose-spec</artifactId>
   <versioning>
-    <release>1.0.0-draft.45</release>
+    <release>1.0.0-draft.46</release>
     <versions>
       <version>1.0.0-draft.6</version>
       <version>1.0.0-draft.7</version>
@@ -33,7 +33,8 @@
       <version>1.0.0-draft.43</version>
       <version>1.0.0-draft.44</version>
       <version>1.0.0-draft.45</version>
+      <version>1.0.0-draft.46</version>
     </versions>
-    <lastUpdated>20261103043704</lastUpdated>
+    <lastUpdated>20261103070507</lastUpdated>
   </versioning>
 </metadata>
